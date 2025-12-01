@@ -1,17 +1,19 @@
+version: '3.8'
+
 services:
   jenkins:
     build:
-      context: .
+      context: ./jenkins
     container_name: jenkins-server
     ports:
-      - "8081:8080"   # interface Jenkins
-      - "50000:50000" # agentes
+      - "8081:8080"
+      - "50000:50000"
     volumes:
       - jenkins_home:/var/jenkins_home
-      - /var/run/docker.sock:/var/run/docker.sock   # permite rodar docker no host
-      - ../:/home/jenkins/app   # monta a pasta pai (contendo app-docker-compose.yml)
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
 
 volumes:
   jenkins_home:
+
