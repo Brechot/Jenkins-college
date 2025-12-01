@@ -35,22 +35,6 @@ services:
     ports:
       - "8080:80"
 
-  jenkins:
-    build:
-      context: ./jenkins
-    container_name: jenkins-server
-    ports:
-      - "8081:8080"
-      - "50000:50000"
-    volumes:
-      - jenkins_home:/var/jenkins_home
-      - /var/run/docker.sock:/var/run/docker.sock   # permite o Jenkins controlar o Docker do host
-    environment:
-      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false  # opcional: pular wizard (você pode remover)
-    networks:
-      - default
-
 volumes:
   dbdata:
-  jenkins_home:
 
