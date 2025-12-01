@@ -1,0 +1,56 @@
+services:
+  app:
+    container_name: laravel_app
+    build:
+      context: ./php
+    volumes:
+      - ./php/src/example-app:/var/www/html
+    ports:
+      - "8000:80"
+    depends_on:
+      - db
+    working_dir: /var/www/html
+    command: bash -c "composer install && php artisan migrate --force && apache2-foreground"
+
+  db:
+    image: mysql:8.0
+    container_name: laravel_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: my_database
+      MYSQL_USER: my_user
+      MYSQL_PASSWORD: my_password
+    volumes:
+      - dbdata:/var/lib/mysql
+    ports:
+      - "9906:3306"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: laravel_pma
+    environment:
+      PMA_HOST: db
+      PMA_USER: my_user
+      PMA_PASSWORD: my_password
+    ports:
+      - "8080:80"
+
+  jenkins:
+    build:
+      context: ./jenkins
+    container_name: jenkins-server
+    ports:
+      - "8081:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock   # permite o Jenkins controlar o Docker do host
+    environment:
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false  # opcional: pular wizard (você pode remover)
+    networks:
+      - default
+
+volumes:
+  dbdata:
+  jenkins_home:
+
