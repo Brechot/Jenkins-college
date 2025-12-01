@@ -3,7 +3,7 @@ version: '3.8'
 services:
   jenkins:
     build:
-      context: ./jenkins
+      context: .
     container_name: jenkins-server
     ports:
       - "8081:8080"
